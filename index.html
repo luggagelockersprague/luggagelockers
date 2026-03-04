@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Instalujeme samoobslužné úschovní boxy pro hotely, rezidence a Airbnb. Bez investice, 24/7, podíl na zisku." />
+  <title>Samoobslužné úschovní boxy pro hotely | Revenue share</title>
+  <style>
+    :root{
+      --bg: #0b1220;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.09);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --line: rgba(255,255,255,.12);
+      --shadow: 0 18px 50px rgba(0,0,0,.35);
+      --radius: 20px;
+      --radius2: 28px;
+      --max: 1120px;
+      --accent1: #7c3aed;
+      --accent2: #22c55e;
+      --accent3: #06b6d4;
+      --warn: #fbbf24;
+      --btn: linear-gradient(135deg, var(--accent1), var(--accent3));
+      --btn2: linear-gradient(135deg, var(--accent2), #84cc16);
+      --glow: 0 0 0 6px rgba(124,58,237,.18), 0 0 40px rgba(6,182,212,.25);
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: var(--font);
+      color: var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 10%, rgba(124,58,237,.35), transparent 55%),
+        radial-gradient(1000px 650px at 85% 15%, rgba(6,182,212,.26), transparent 60%),
+        radial-gradient(900px 550px at 50% 95%, rgba(34,197,94,.20), transparent 55%),
+        var(--bg);
+      overflow-x:hidden;
+    }
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:var(--max); margin:0 auto; padding:0 18px}
+    .nav{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+      background: rgba(11,18,32,.55);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 14px 0;
+      gap: 14px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight: 800; letter-spacing:.2px;
+    }
+    .logo{
+      width:34px; height:34px; border-radius: 12px;
+      background: linear-gradient(135deg, rgba(124,58,237,.95), rgba(6,182,212,.9));
+      box-shadow: var(--glow);
+      display:grid; place-items:center;
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    .logo svg{opacity:.95}
+    .nav-links{display:flex; align-items:center; gap:16px; flex-wrap:wrap}
+    .nav-links a{
+      color: var(--muted);
+      font-weight: 650;
+      font-size: 14px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      transition: .2s ease;
+    }
+    .nav-links a:hover{color:var(--text); background: rgba(255,255,255,.06)}
+    .cta{
+      display:flex; align-items:center; gap:10px;
+    }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:10px;
+      padding: 11px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight: 750;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      transition: .2s ease;
+      cursor:pointer;
+      font-size: 14px;
+      white-space:nowrap;
+    }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10)}
+    .btn-primary{
+      background: var(--btn);
+      border-color: rgba(255,255,255,.22);
+    }
+    .btn-primary:hover{filter: brightness(1.05); box-shadow: var(--glow)}
+    .btn-green{
+      background: var(--btn2);
+      border-color: rgba(255,255,255,.22);
+      color: #07140c;
+    }
+    .btn-green:hover{filter: brightness(1.04)}
+    .hero{
+      padding: 54px 0 26px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+    @media (max-width: 960px){
+      .hero-grid{grid-template-columns: 1fr; }
+      .cta{display:none}
+    }
+    .kicker{
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .kicker b{color: var(--text)}
+    h1{
+      margin: 14px 0 10px;
+      font-size: clamp(34px, 3.2vw, 54px);
+      line-height: 1.05;
+      letter-spacing: -0.8px;
+    }
+    .sub{
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+      margin: 0 0 18px;
+      max-width: 60ch;
+    }
+    .bullets{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+      margin: 16px 0 18px;
+    }
+    @media (max-width: 640px){
+      .bullets{grid-template-columns: 1fr}
+      .nav-links{display:none}
+    }
+    .pill{
+      display:flex; gap:10px; align-items:flex-start;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.05);
+    }
+    .pill .dot{
+      width:10px; height:10px; border-radius: 999px;
+      margin-top: 4px;
+      background: var(--accent3);
+      box-shadow: 0 0 0 5px rgba(6,182,212,.16);
+    }
+    .pill b{display:block; font-size: 14px}
+    .pill span{display:block; color: var(--muted); font-size: 13px; margin-top:2px}
+    .hero-actions{
+      display:flex; gap:10px; flex-wrap:wrap; margin-top: 6px;
+    }
+    .note{
+      margin-top: 10px;
+      color: rgba(255,255,255,.55);
+      font-size: 12.5px;
+    }
+    .card{
+      border-radius: var(--radius2);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card-pad{padding: 18px}
+    .mock{
+      min-height: 390px;
+      display:flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    .mock-top{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding: 16px 16px 0;
+    }
+    .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      color: rgba(255,255,255,.75);
+      font-weight: 750;
+      font-size: 12px;
+    }
+    .tag .spark{
+      width: 10px; height:10px; border-radius: 99px;
+      background: var(--accent1);
+      box-shadow: 0 0 0 5px rgba(124,58,237,.16);
+    }
+    .mock-body{
+      padding: 16px;
+      display:grid;
+      gap: 10px;
+    }
+    .stat{
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      padding: 12px 12px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .stat b{font-size: 14px}
+    .stat span{color: var(--muted); font-size: 12.5px}
+    .bar{
+      height: 8px; border-radius: 999px; background: rgba(255,255,255,.10);
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.10);
+      flex: 1;
+      min-width: 140px;
+    }
+    .bar > i{
+      display:block; height:100%;
+      width: 72%;
+      background: linear-gradient(90deg, rgba(34,197,94,.85), rgba(6,182,212,.85));
+    }
+    .mock-bottom{
+      padding: 16px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      display:flex; gap:10px; flex-wrap:wrap;
+      background: rgba(0,0,0,.18);
+    }
+
+    section{padding: 26px 0}
+    .grid-3{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 14px;
+    }
+    @media (max-width: 900px){ .grid-3{grid-template-columns:1fr} }
+    h2{
+      margin: 0 0 12px;
+      font-size: clamp(22px, 2vw, 30px);
+      letter-spacing: -.3px;
+    }
+    .lead{
+      margin: 0 0 18px;
+      color: var(--muted);
+      max-width: 80ch;
+      line-height: 1.6;
+      font-size: 15.5px;
+    }
+    .feat{
+      padding: 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.05);
+    }
+    .feat h3{margin: 2px 0 6px; font-size: 16px}
+    .feat p{margin:0; color: var(--muted); line-height: 1.55; font-size: 14px}
+    .icon{
+      width: 36px; height:36px; border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.18);
+      display:grid; place-items:center;
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 12px 26px rgba(0,0,0,.18);
+      margin-bottom: 10px;
+    }
+    .steps{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 14px;
+    }
+    @media (max-width: 900px){ .steps{grid-template-columns:1fr} }
+    .step{
+      padding: 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      position: relative;
+      overflow:hidden;
+    }
+    .step:before{
+      content:"";
+      position:absolute;
+      inset:-40% -40% auto auto;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle at 30% 30%, rgba(124,58,237,.28), transparent 60%);
+      transform: rotate(25deg);
+      pointer-events:none;
+    }
+    .num{
+      display:inline-flex; align-items:center; justify-content:center;
+      width: 34px; height: 34px; border-radius: 14px;
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.14);
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+    .step h3{margin: 0 0 6px; font-size: 16px}
+    .step p{margin:0; color: var(--muted); line-height: 1.55; font-size: 14px}
+    .split{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+    @media (max-width: 960px){ .split{grid-template-columns:1fr} }
+    .about{
+      padding: 18px;
+      border-radius: var(--radius2);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.05);
+    }
+    .about p{margin:0; color: var(--muted); line-height: 1.6; font-size: 14.5px}
+    .badges{display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px}
+    .badge{
+      display:inline-flex; gap:10px; align-items:center;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: rgba(255,255,255,.82);
+      font-weight: 750;
+      font-size: 12.5px;
+    }
+    .badge i{
+      width: 10px; height: 10px; border-radius: 99px;
+      background: var(--accent2);
+      box-shadow: 0 0 0 5px rgba(34,197,94,.16);
+      display:inline-block;
+    }
+
+    .form{
+      padding: 18px;
+      border-radius: var(--radius2);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.05);
+    }
+    label{display:block; font-weight: 750; font-size: 13px; color: rgba(255,255,255,.86); margin: 10px 0 6px}
+    input, textarea, select{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      outline:none;
+      font-family: var(--font);
+      font-size: 14px;
+    }
+    input:focus, textarea:focus, select:focus{box-shadow: var(--glow); border-color: rgba(255,255,255,.22)}
+    textarea{min-height: 110px; resize: vertical}
+    .form-row{display:grid; grid-template-columns: 1fr 1fr; gap: 10px}
+    @media (max-width: 640px){ .form-row{grid-template-columns:1fr} }
+    .form-actions{display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px}
+    .small{
+      color: rgba(255,255,255,.55);
+      font-size: 12.5px;
+      line-height:1.5;
+      margin-top: 10px;
+    }
+    footer{
+      padding: 26px 0 46px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      color: rgba(255,255,255,.65);
+      font-size: 13px;
+    }
+    .footer-inner{
+      display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap;
+    }
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+    .hide{display:none}
+  </style>
+</head>
+
+<body>
+  <header class="nav">
+    <div class="wrap">
+      <div class="nav-inner">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M7 7h10v14H7V7Z" stroke="white" stroke-width="2" opacity=".9"/>
+              <path d="M9 7V5a3 3 0 0 1 6 0v2" stroke="white" stroke-width="2" opacity=".9"/>
+              <path d="M10 12h4" stroke="white" stroke-width="2" opacity=".9"/>
+            </svg>
+          </div>
+          <div>
+            <div style="font-size:14px; color:rgba(255,255,255,.8); font-weight:800;">LOCKERS AS A SERVICE</div>
+            <div style="font-size:12px; color:rgba(255,255,255,.55); font-weight:650;">Samoobslužné úschovní boxy pro hotely</div>
+          </div>
+        </div>
+
+        <nav class="nav-links" aria-label="Hlavní navigace">
+          <a href="#jak-to-funguje">Jak to funguje</a>
+          <a href="#vyhody">Výhody</a>
+          <a href="#pro-koho">Pro koho</a>
+          <a href="#o-nas">O nás</a>
+          <a href="#kontakt">Kontakt</a>
+        </nav>
+
+        <div class="cta">
+          <a class="btn" href="#kontakt">Nezávazná poptávka</a>
+          <a class="btn btn-primary" href="#kontakt">Chci instalaci</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <div class="hero-grid">
+        <div>
+          <div class="kicker">
+            <span style="width:10px;height:10px;border-radius:99px;background:var(--warn);box-shadow:0 0 0 5px rgba(251,191,36,.12)"></span>
+            Bez investice • 24/7 • <b>podíl na zisku</b>
+          </div>
+
+          <h1>Samoobslužné úschovní boxy jako služba pro hotely, rezidence a Airbnb</h1>
+
+          <p class="sub">
+            Vy poskytnete prostor (např. lobby, chodbu nebo recepci). My dodáme boxy, software, instalaci,
+            servis i podporu. Hosté si uloží zavazadla před check-inem nebo po check-outu — a vy máte pasivní příjem.
+          </p>
+
+          <div class="bullets">
+            <div class="pill">
+              <div class="dot"></div>
+              <div><b>0 Kč investice</b><span>Instalace, hardware i provoz jsou na nás</span></div>
+            </div>
+            <div class="pill">
+              <div class="dot" style="background:var(--accent2); box-shadow:0 0 0 5px rgba(34,197,94,.16)"></div>
+              <div><b>Revenue share</b><span>Transparentní podíl z každé transakce</span></div>
+            </div>
+            <div class="pill">
+              <div class="dot" style="background:var(--accent1); box-shadow:0 0 0 5px rgba(124,58,237,.16)"></div>
+              <div><b>Plně automatické</b><span>Bez personálu, funguje 24/7</span></div>
+            </div>
+            <div class="pill">
+              <div class="dot" style="background:var(--warn); box-shadow:0 0 0 5px rgba(251,191,36,.12)"></div>
+              <div><b>Prokazatelný provoz</b><span>Ověřené v turistických lokalitách</span></div>
+            </div>
+          </div>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#kontakt">Získejte nabídku pro váš prostor</a>
+            <a class="btn" href="#jak-to-funguje">Jak to funguje</a>
+            <a class="btn btn-green" href="#kontakt">Spočítat potenciál výnosu</a>
+          </div>
+
+          <div class="note">
+            Tip: tento web je připravený jako B2B landing — stačí doplnit logo, fotky boxů a kontakty.
+          </div>
+        </div>
+
+        <!-- RIGHT MOCK CARD -->
+        <div class="card mock" role="figure" aria-label="Ukázka přínosu a provozu">
+          <div class="mock-top">
+            <div class="tag"><span class="spark"></span> Partner dashboard</div>
+            <div class="tag" style="border-color:rgba(34,197,94,.25)"><span class="spark" style="background:var(--accent2); box-shadow:0 0 0 5px rgba(34,197,94,.14)"></span> 24/7</div>
+          </div>
+
+          <div class="mock-body">
+            <div class="stat">
+              <div>
+                <b>Bez obsluhy</b><br />
+                <span>host vše vyřeší sám</span>
+              </div>
+              <div class="bar" aria-hidden="true"><i style="width:86%"></i></div>
+            </div>
+
+            <div class="stat">
+              <div>
+                <b>Podíl na zisku</b><br />
+                <span>z každé objednávky</span>
+              </div>
+              <div class="bar" aria-hidden="true"><i style="width:68%"></i></div>
+            </div>
+
+            <div class="stat">
+              <div>
+                <b>Rychlá instalace</b><br />
+                <span>typicky během dní</span>
+              </div>
+              <div class="bar" aria-hidden="true"><i style="width:74%"></i></div>
+            </div>
+
+            <div class="feat" style="margin-top:6px">
+              <div class="icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path d="M4 12a8 8 0 1 0 16 0 8 8 0 0 0-16 0Z" stroke="white" stroke-width="2" opacity=".9"/>
+                  <path d="M12 7v5l3 2" stroke="white" stroke-width="2" opacity=".9"/>
+                </svg>
+              </div>
+              <h3 style="margin:0 0 6px">Ideální pro hosty před/po check-inu</h3>
+              <p style="margin:0; color:var(--muted)">
+                Minimalizujete tlak na recepci a zvýšíte spokojenost (a recenze).
+              </p>
+            </div>
+          </div>
+
+          <div class="mock-bottom">
+            <a class="btn btn-primary" href="#kontakt">Chci nabídku</a>
+            <a class="btn" href="#vyhody">Proč to funguje</a>
+            <a class="btn" href="#o-nas">Ověřený provoz</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="jak-to-funguje">
+      <h2>Jak to funguje</h2>
+      <p class="lead">
+        Jednoduchý partnerský model: vy poskytnete prostor, my dodáme technologii, provoz a podporu.
+        Vše běží automaticky, bez zásahu personálu.
+      </p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="num">1</div>
+          <h3>Prohlídka & návrh</h3>
+          <p>Rychle posoudíme prostor (lobby/chodba/recepce), navrhneme rozměry a kapacitu boxů.</p>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <h3>Instalace & spuštění</h3>
+          <p>Dodáme boxy, nastavíme systém, značení a instrukce pro hosty. Vyřešíme provozní detaily.</p>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <h3>Provoz & výplata podílu</h3>
+          <p>My spravujeme, servisujeme, podporujeme zákazníky. Vy dostáváte svůj podíl z každé transakce.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- BENEFITS -->
+    <section id="vyhody">
+      <h2>Proč se to vyplatí</h2>
+      <p class="lead">
+        Úschova zavazadel řeší největší „bolest“ turistů: co s kufry mezi check-inem a check-outem.
+        Vy z toho máte příjem a spokojení hosté lepší hodnocení.
+      </p>
+
+      <div class="grid-3">
+        <div class="feat">
+          <div class="icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3 3-7Z" stroke="white" stroke-width="2" opacity=".9"/>
+            </svg>
+          </div>
+          <h3>Bez investice</h3>
+          <p>Neplatíte hardware ani instalaci. Model „space-for-revenue“ – vy poskytnete místo.</p>
+        </div>
+
+        <div class="feat">
+          <div class="icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 1v22" stroke="white" stroke-width="2" opacity=".85"/>
+              <path d="M17 5H9a3 3 0 0 0 0 6h6a3 3 0 0 1 0 6H6" stroke="white" stroke-width="2" opacity=".9"/>
+            </svg>
+          </div>
+          <h3>Pasivní příjem</h3>
+          <p>Podíl z každé transakce. Transparentní reporting a jednoduché vyúčtování.</p>
+        </div>
+
+        <div class="feat">
+          <div class="icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M6 18V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12" stroke="white" stroke-width="2" opacity=".9"/>
+              <path d="M6 18a2 2 0 0 0 2 2h10" stroke="white" stroke-width="2" opacity=".9"/>
+              <path d="M9 9h6M9 12h6" stroke="white" stroke-width="2" opacity=".85"/>
+            </svg>
+          </div>
+          <h3>Zároveň služba navíc</h3>
+          <p>Hosté uloží kufry před/po pobytu. Méně zatížení recepce, více spokojenosti.</p>
+        </div>
+
+        <div class="feat">
+          <div class="icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" stroke="white" stroke-width="2" opacity=".9"/>
+              <path d="M9 12l2 2 4-5" stroke="white" stroke-width="2" opacity=".9"/>
+            </svg>
+          </div>
+          <h3>Bezpečí & pravidla</h3>
+          <p>Jasné podmínky, automatizace, dohled, provozní procesy a podpora pro hosty.</p>
+        </div>
+
+        <div class="feat">
+          <div class="icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M4 14l8-8 8 8" stroke="white" stroke-width="2" opacity=".9"/>
+              <path d="M6 12v8h12v-8" stroke="white" stroke-width="2" opacity=".9"/>
+            </svg>
+          </div>
+          <h3>Vhodné do lobby</h3>
+          <p>Kompaktní řešení. Instalace do veřejných částí budov bez narušení provozu.</p>
+        </div>
+
+        <div class="feat">
+          <div class="icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M20 7l-8 10L4 7" stroke="white" stroke-width="2" opacity=".9"/>
+              <path d="M4 7h16" stroke="white" stroke-width="2" opacity=".85"/>
+            </svg>
+          </div>
+          <h3>Podpora hostům</h3>
+          <p>Dotazy, problémy, refundace — řešíme my. Vy máte klid a čistý revenue.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHO -->
+    <section id="pro-koho">
+      <h2>Pro koho je to ideální</h2>
+      <p class="lead">
+        Nejlépe funguje tam, kde se točí hosté a často řeší kufry mezi příjezdem a odjezdem.
+      </p>
+
+      <div class="grid-3">
+        <div class="feat">
+          <h3>Hotely</h3>
+          <p>Zlepšíte flow na recepci, přidáte placenou službu a zvýšíte rating.</p>
+        </div>
+        <div class="feat">
+          <h3>Rezidence & aparthotely</h3>
+          <p>Skvělé pro self-check-in budovy. Automatické, bez personálu.</p>
+        </div>
+        <div class="feat">
+          <h3>Airbnb budovy</h3>
+          <p>Vyřešíte kufry pro hosty a získáte podíl z výnosů — bez investice.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT + CONTACT -->
+    <section id="o-nas">
+      <div class="split">
+        <div class="about">
+          <h2>O nás</h2>
+          <p>
+            Provozujeme úschovu zavazadel dlouhodobě a máme ověřený koncept v turisticky vytížených lokalitách.
+            Naše řešení je navržené pro vysoký provoz, jednoduché použití a minimální nároky na obsluhu.
+          </p>
+
+          <div class="badges" aria-label="Hlavní fakta">
+            <div class="badge"><i></i> Fungujeme od roku 2016</div>
+            <div class="badge"><i style="background:var(--accent3); box-shadow:0 0 0 5px rgba(6,182,212,.16)"></i> Leader v Praze</div>
+            <div class="badge"><i style="background:var(--accent1); box-shadow:0 0 0 5px rgba(124,58,237,.16)"></i> Užitný vzor / ochrana řešení</div>
+          </div>
+
+          <div style="margin-top:14px; padding:14px; border:1px solid var(--line); border-radius:18px; background:rgba(0,0,0,.18)">
+            <div style="font-weight:850; margin-bottom:6px">Co od vás potřebujeme pro rychlou nabídku</div>
+            <div style="color:var(--muted); font-size:14px; line-height:1.6">
+              • Město + adresa (nebo aspoň lokalita)<br/>
+              • Typ objektu (hotel/rezidence/Airbnb)<br/>
+              • Přibližný počet pokojů / jednotek<br/>
+              • Fotka prostoru nebo půdorys (stačí mobilem)<br/>
+              • Zda je prostor přístupný 24/7
+            </div>
+          </div>
+        </div>
+
+        <div class="form" id="kontakt">
+          <h2>Nezávazná poptávka</h2>
+          <p class="lead" style="margin-bottom:10px">
+            Pošli pár informací — odpovíme s návrhem kapacity a modelu spolupráce.
+          </p>
+
+          <!-- Jednoduchý mailto formulář (bez backendu) -->
+          <form id="leadForm">
+            <div class="form-row">
+              <div>
+                <label for="name">Jméno</label>
+                <input id="name" name="name" placeholder="Např. Roman K." required />
+              </div>
+              <div>
+                <label for="company">Hotel / firma</label>
+                <input id="company" name="company" placeholder="Např. Hotel ABC" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div>
+                <label for="city">Město</label>
+                <input id="city" name="city" placeholder="Např. Praha" required />
+              </div>
+              <div>
+                <label for="type">Typ objektu</label>
+                <select id="type" name="type" required>
+                  <option value="" selected disabled>Vyberte</option>
+                  <option>Hotel</option>
+                  <option>Rezidence / Aparthotel</option>
+                  <option>Airbnb budova</option>
+                  <option>Jiné</option>
+                </select>
+              </div>
+            </div>
+
+            <label for="units">Počet pokojů / jednotek (odhad)</label>
+            <input id="units" name="units" placeholder="Např. 40" />
+
+            <label for="space">Popis prostoru pro instalaci</label>
+            <textarea id="space" name="space" placeholder="Kde by boxy mohly být? Lobby, chodba, recepce... Je prostor přístupný 24/7?"></textarea>
+
+            <label for="contact">Kontakt (email / telefon)</label>
+            <input id="contact" name="contact" placeholder="např. roman@email.cz / +420..." required />
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Odeslat poptávku</button>
+              <a class="btn" href="#top">Zpět nahoru</a>
+            </div>
+
+            <div class="small">
+              Formulář je bez backendu — otevře se email s vyplněnými údaji. Později lze napojit na CRM (HubSpot, Pipedrive).
+              <span class="mono">Kontakt</span> dole v kódu si snadno přepíšete.
+            </div>
+          </form>
+
+          <div class="card-pad" style="padding:14px 0 0">
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <a class="btn" id="emailLink" href="mailto:partnerships@yourdomain.com">Email: partnerships@yourdomain.com</a>
+              <a class="btn" href="tel:+420000000000">Tel: +420 000 000 000</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <h2>FAQ</h2>
+      <p class="lead">Nejčastější otázky partnerů.</p>
+      <div class="grid-3">
+        <div class="feat">
+          <h3>Kolik místa potřebuji?</h3>
+          <p>Stačí menší část lobby / chodby. Přesný návrh kapacity uděláme podle provozu a prostoru.</p>
+        </div>
+        <div class="feat">
+          <h3>Musím něco platit?</h3>
+          <p>Ne. Model je bez vstupní investice — my financujeme a provozujeme, vy máte podíl.</p>
+        </div>
+        <div class="feat">
+          <h3>Kdo řeší support a reklamace?</h3>
+          <p>My. Hostům poskytujeme podporu a řešíme provozní situace. Personál nezatěžujeme.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-inner">
+        <div>
+          <div style="font-weight:850; color:rgba(255,255,255,.8)">Lockers as a Service</div>
+          <div class="mono">© <span id="year"></span> • All rights reserved</div>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap">
+          <a class="btn" href="#kontakt">Poptávka</a>
+          <a class="btn" href="#jak-to-funguje">Jak to funguje</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // Nastavte sem svůj email (kam mají chodit poptávky)
+    const DEST_EMAIL = "partnerships@yourdomain.com";
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // mailto submit bez backendu
+    document.getElementById("leadForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const f = e.target;
+      const name = f.name.value.trim();
+      const company = f.company.value.trim();
+      const city = f.city.value.trim();
+      const type = f.type.value;
+      const units = f.units.value.trim();
+      const space = f.space.value.trim();
+      const contact = f.contact.value.trim();
+
+      const subject = encodeURIComponent(`Poptávka: Lockery pro ${company} (${city})`);
+      const body = encodeURIComponent(
+`Dobrý den,
+
+mám zájem o instalaci samoobslužných úschovných boxů.
+
+Jméno: ${name}
+Firma/Hotel: ${company}
+Město: ${city}
+Typ objektu: ${type}
+Počet pokojů/jednotek: ${units || "-"}
+Popis prostoru: ${space || "-"}
+Kontakt: ${contact}
+
+Děkuji a prosím o návrh kapacity + model spolupráce.
+`
+      );
+
+      window.location.href = `mailto:${DEST_EMAIL}?subject=${subject}&body=${body}`;
+    });
+
+    // uprav text linku emailu podle DEST_EMAIL
+    const emailLink = document.getElementById("emailLink");
+    emailLink.href = `mailto:${DEST_EMAIL}`;
+    emailLink.textContent = `Email: ${DEST_EMAIL}`;
+  </script>
+</body>
+</html>
